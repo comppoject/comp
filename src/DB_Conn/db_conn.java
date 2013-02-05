@@ -38,6 +38,16 @@ public class db_conn {
         return out;
     }
     
+    public int exUpdate(String mysql_query) throws SQLException {
+        PreparedStatement statement = null;
+        int out = 0;
+        if (mysql_query != null) {
+            statement = con.prepareStatement(mysql_query);
+            out = statement.executeUpdate();
+        }
+        return out;
+    }
+    
     public static int numCols(ResultSet res) throws SQLException{
         ResultSetMetaData resMD = res.getMetaData();
         return resMD.getColumnCount();
