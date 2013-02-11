@@ -6,40 +6,45 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
 
 public class sell {
-    private static DateFormat df;
-    private static Date curr_time;
+    public static DateFormat df;
+    public static Date curr_time;
     private static db_conn con = new db_conn();
 
     public sell() throws ClassNotFoundException, SQLException {
         con.conn();
         df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    }
-    
-    
-    public static void insert(String total) throws SQLException {
         curr_time = Calendar.getInstance().getTime();
-        int done = con.exUpdate("insert into sell (date, total) values ('" + df.format(curr_time) + "', '" +total+ "')");
-        System.out.println(done + " rows affected.");
     }
     
-    public static void select() throws SQLException {
+    
+    public static void insertSell(String cols, String table, String total) throws SQLException {
+        int done = con.exUpdate("insert into " + table + " (" + cols + ") values ('" + df.format(curr_time) + "', '" +total+ "')");
+    }
+    
+    public static void insert(String cols, String table, String vals) throws SQLException {
+        curr_time = Calendar.getInstance().getTime();
+        int done = con.exUpdate("insert into " + table + " (" + cols + ") values (" + vals + ")");
+    }
+    
+    public static String[][] select() throws SQLException {
         String query = "select * from sell ";
         String[][] arr = con.resSetToArray(con.resSet(query));
-        
-        
-        for(int i = 0; i < arr.length; i++) {
-            for(int j = 0; j < arr[0].length; j++) {
-                System.out.print(arr[i][j] + "\t");
-            }
-            System.out.println();
-        }
+        return arr;
     }
     
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        sell x = new sell();
-        //x.insert("120");
-        x.select();
+    public static String[][] search(String cols, String table, String cond) throws SQLException {
+        String query = "select " + cols + " from " + table + " " + cond;
+        String[][] arr = con.resSetToArray(con.resSet(query));
+        return arr;
     }
+    
+    public static Vector<String> get_col(String col, String table, String cond) throws SQLException {
+        String query = "select " + col + " from " + table + " " + cond;
+        Vector<String> res = con.resSetToVector(col, con.resSet(query));
+        return res;
+    }
+    
 }

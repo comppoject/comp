@@ -1,6 +1,7 @@
 package DB_Conn;
 
 import java.sql.*;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,6 +73,15 @@ public class db_conn {
             t++;
         }
         return row;
+    }
+    
+    public static Vector<String> resSetToVector(String col, ResultSet res) throws SQLException {
+        Vector<String> out = new Vector<String>();
+        int t = 0;
+        while (res.next()) {
+                out.add(res.getString(col));
+        }
+        return out;
     }
     
         
